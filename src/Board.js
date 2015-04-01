@@ -140,7 +140,6 @@
       var count = 0;
       for(var i = majorDiagonalColumnIndexAtFirstRow; i < matrix.length; i++)
       {
-        console.log(rows,i);
         if (rows >= 0 && rows < matrix.length){
           count += matrix[rows++][i];
         }
@@ -169,26 +168,30 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow,rowIndex) {
       var matrix = this.rows();
-      var rows = 0;
+      var rows = rowIndex;
       var count = 0;
       for(var i = minorDiagonalColumnIndexAtFirstRow; i >= 0; i--)
       {
-        count += matrix[rows++][i];
+        if (rows >= 0 && rows < matrix.length){
+          count += matrix[rows++][i];
+        }
       }
       return count > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      var rows = this.rows();
-      var conflict = false;
-      for(var i = 0; i < rows.length; i++)
-      {
-        conflict = conflict || this.hasMinorDiagonalConflictAt(i);
+      var matrix = this.rows();
+      for (var rows = 0; rows < matrix.length; rows++){
+        for (var cols = 0; cols < matrix.length; cols++){
+          if (this.hasMinorDiagonalConflictAt(cols,rows)){
+            return true;
+          }
+        }
       }
-      return conflict;
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
