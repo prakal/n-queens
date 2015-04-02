@@ -36,22 +36,30 @@ window.countNRooksSolutions = function(n) {
   var collections = [];
   var board = new Board({"n":n});
   // console.log("1");
+  // inner recursive function takes input of row and the matrix of elements created by board.
   var innerFunction = function(row, matrix) {
 
     for(var i = 0; i < n ; i++)
     {
+      // create a copy of our board, so that it does not get changed for every recursion
       var newMatrix = [];
       for (var a = 0; a < matrix.length; a++) {
           newMatrix[a] = matrix[a].slice();
       }
 
       var newBoard = new Board(newMatrix);
+
+      // initially set matrix[row][i] to 1
       newBoard.togglePiece(row, i);
+
       // console.log("3: " + i + " " + row + " " + newMatrix);
+      // Looking only for column conflict, since we skip rows through recursion (row+1)
       if(!newBoard.hasColConflictAt(i))
       {
         // console.log("4");
         // console.log("new Matrix: " + newBoard.rows());
+
+        // check if we have reached the end of our board, so we can push it
         if(row === n - 1)
         {
           // console.log("6");
@@ -60,7 +68,7 @@ window.countNRooksSolutions = function(n) {
         }
         else {
           // console.log("7");
-
+          // call function recursively, making the scope of our problem smaller by skipping the row
           innerFunction(row + 1, newBoard.rows());
         }
       }
