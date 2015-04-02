@@ -51,47 +51,45 @@ window.findNRooksSolution = function(n, matrix, collections) {
 window.countNRooksSolutions = function(n) {
   var collections = [];
   var board = new Board({"n":n});
-  console.log("1");
+  // console.log("1");
   var innerFunction = function(row, matrix) {
-    var newMatrix = [];
-    for (var a = 0; a < matrix.length; a++) {
-        newMatrix[a] = matrix[a].slice();
-    }
 
-    var newBoard = new Board(newMatrix);
-    console.log("2");
     for(var i = 0; i < n ; i++)
     {
-      console.log("3: " + i + " " + row + " " + n);
+      var newMatrix = [];
+      for (var a = 0; a < matrix.length; a++) {
+          newMatrix[a] = matrix[a].slice();
+      }
+
+      var newBoard = new Board(newMatrix);
+      newBoard.togglePiece(row, i);
+      // console.log("3: " + i + " " + row + " " + newMatrix);
       if(!newBoard.hasColConflictAt(i))
       {
-        console.log("4");
-        newBoard.togglePiece(row, i);
+        // console.log("4");
+        // console.log("new Matrix: " + newBoard.rows());
         if(row === n - 1)
         {
-          console.log("6");
-          console.log(newMatrix);
+          // console.log("6");
           collections.push(newBoard);
 
         }
         else {
-          console.log("7");
+          // console.log("7");
 
-
-          console.log("8");
           innerFunction(row + 1, newBoard.rows());
         }
       }
       else
       {
-        console.log("hit nothing");
+        // console.log("hit nothing");
       }
     }
   }
-  console.log("5");
+  // console.log("5");
   innerFunction(0, board.rows());
 
-  console.log('Number of solutions for ' + n + ' rooks:', collections.length);
+  // console.log('Number of solutions for ' + n + ' rooks:', collections.length);
   return collections.length;
 };
 
