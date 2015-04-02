@@ -84,19 +84,31 @@ window.countNRooksSolutions = function(n) {
 window.findNQueensSolution = function(n) {
   var solution = new Board({"n":n});
   var matrix = solution.rows();
-  for(var i = 0; i < matrix.length ;i++)
+  var count = 0;
+  var startCounter = 0;
+  while(count < n && startCounter < n * n)
   {
-    for(var j = 0; j < matrix.length; j++)
+    solution = new Board({"n":n});
+    count = 0;
+    tempCounter = 0;
+    var rowCounter = startCounter % n;
+    for(var i = 0; i < n ;i++)
     {
-      solution.togglePiece(i,j);
-      console.log("toggle " + JSON.stringify(solution));
-      if(solution.hasAnyQueenConflictsOn(i,j))
+      for(var j = 0; j < n; j++)
       {
-
-      console.log("toggle");
-        solution.togglePiece(i,j);
+        solution.togglePiece(rowCounter,j);
+        count++;
+        if(solution.hasAnyQueenConflictsOn(rowCounter,j))
+        {
+          solution.togglePiece(rowCounter,j);
+          count--;
+        }
       }
+      rowCounter = (rowCounter + 1) % n;
     }
+    console.log("count " + count);
+    console.log(JSON.stringify(solution));
+    startCounter++;
   }
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
 
