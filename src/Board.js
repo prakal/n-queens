@@ -139,14 +139,9 @@
       var count = 0;
       for(var i = 0; i < matrix.length; i++)
       {
-        for(var j = 0; j < matrix.length; j++)
-        {
-          if(j - i === majorDiagonalColumnIndexAtFirstRow)
-          {
-            count += matrix[i][j];
-          }
-        }
-          
+        var j = majorDiagonalColumnIndexAtFirstRow + i;
+        if(j < matrix.length && j >= 0)
+          count += matrix[i][majorDiagonalColumnIndexAtFirstRow + i];
       }
       return count > 1;
     },
@@ -162,6 +157,7 @@
           }
         }
       }
+      console.log("returned false");
       return false;
 
 
@@ -185,7 +181,7 @@
             count += matrix[i][j];
           }
         }
-          
+
       }
       return count > 1;
     },
