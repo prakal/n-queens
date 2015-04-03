@@ -30,59 +30,21 @@ window.findNRooksSolution = function(n) {
   return solution.rows();
 };
 
-
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var collections = [];
-  var board = new Board({"n":n});
-  // console.log("1");
-  // inner recursive function takes input of row and the matrix of elements created by board.
-  var innerFunction = function(row, matrix) {
-
-    for(var i = 0; i < n ; i++)
+  var factorial = function(count)
+  {
+    if(count === 1 || count === 0)
     {
-      // create a copy of our board, so that it does not get changed for every recursion
-      var newMatrix = [];
-      for (var a = 0; a < matrix.length; a++) {
-          newMatrix[a] = matrix[a].slice();
-      }
-
-      var newBoard = new Board(newMatrix);
-
-      // initially set matrix[row][i] to 1
-      newBoard.togglePiece(row, i);
-
-      // console.log("3: " + i + " " + row + " " + newMatrix);
-      // Looking only for column conflict, since we skip rows through recursion (row+1)
-      if(!newBoard.hasColConflictAt(i))
-      {
-        // console.log("4");
-        // console.log("new Matrix: " + newBoard.rows());
-
-        // check if we have reached the end of our board, so we can push it
-        if(row === n - 1)
-        {
-          // console.log("6");
-          collections.push(newBoard);
-
-        }
-        else {
-          // console.log("7");
-          // call function recursively, making the scope of our problem smaller by skipping the row
-          innerFunction(row + 1, newBoard.rows());
-        }
-      }
-      else
-      {
-        // console.log("hit nothing");
-      }
+      return 1;
+    }
+    else
+    {
+      return count * factorial(count - 1);
     }
   }
-  // console.log("5");
-  innerFunction(0, board.rows());
 
-  // console.log('Number of solutions for ' + n + ' rooks:', collections.length);
-  return collections.length;
+  return factorial(n);
 };
 
 
@@ -126,7 +88,7 @@ window.findNQueensSolution = function(n) {
         var testResult = innerFunction(t, k);
         if(testResult !== null)
         {
-          result = testResult;
+          return testResult.rows();
         }
     }
   }
@@ -137,49 +99,36 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  n = n || 1;
-  var collections = [];
-  var board = new Board({"n":n});
-  // console.log("1");
-  var innerFunction = function(row, matrix) {
+   //Keeps track of the # of valid solutions
+  var count = 0;
 
-    for(var i = 0; i < n ; i++)
-    {
-      var newMatrix = [];
-      for (var a = 0; a < matrix.length; a++) {
-          newMatrix[a] = matrix[a].slice();
-      }
+  //Helps identify valid solutions
+  var done = Math.pow(2,n) - 1;
 
-      var newBoard = new Board(newMatrix);
-      newBoard.togglePiece(row, i);
-      // console.log("3: " + i + " " + row + " " + newMatrix);
-      if(!newBoard.hasAnyQueenConflictsOn(row, i))
-      {
-        // console.log("4");
-        // console.log("new Matrix: " + newBoard.rows());
-        if(row === n - 1)
-        {
-          // console.log("6");
-          collections.push(newBoard);
+  //Checks all possible board configurations
+  var innerRecurse = function(ld, col, rd) {
 
-        }
-        else {
-          // console.log("7");
-
-          innerFunction(row + 1, newBoard.rows());
-        }
-      }
-      else
-      {
-        // console.log("hit nothing");
-      }
+    //All columns are occupied,
+    //so the solution must be complete
+    if (col === done) {
+      count++;
+      return;
     }
-  }
-  // console.log("5");
-  innerFunction(0, board.rows());
 
-  // console.log('Number of solutions for ' + n + ' rooks:', collections.length);
-  return collections.length;
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+    //Gets a bit sequence with "1"s
+    //whereever there is an open "slot"
+    var poss = ~(ld | rd | col);
+
+    //Loops as long as there is a valid
+    //place to put another queen.
+    while ( poss & done ) {
+      var bit = poss & -poss;
+      poss -= bit;
+      innerRecurse((ld|bit)>>1, col|bit, (rd|bit)<<1);
+    }
+  };
+
+  innerRecurse(0,0,0);
+
+  return count;
 };

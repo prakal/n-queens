@@ -152,12 +152,10 @@
       for (var rows = 0; rows < matrix.length; rows++){
         for (var cols = 0; cols < matrix.length; cols++){
           if (this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rows, cols))){
-            console.log("check " + cols, rows);
             return true;
           }
         }
       }
-      console.log("returned false");
       return false;
 
 
@@ -181,7 +179,6 @@
             count += matrix[i][j];
           }
         }
-
       }
       return count > 1;
     },
